@@ -1,11 +1,11 @@
 {
-  "name": "js-cw-8",
+  "name": "goit-js-hw-08",
   "version": "2.0.0",
   "description": "",
-  "homepage": "https://Angey22.github.io/JS-CW-8",
+  "homepage": "https://Angey22.github.io/goit-js-hw-08",
   "scripts": {
     "start": "parcel src/*.html",
-    "build": "parcel build src/*.html --public-url /JS-CW-8/"
+    "build": "parcel build src/*.html --public-url /goit-js-hw-08/"
   },
   "repository": {
     "type": "git",
