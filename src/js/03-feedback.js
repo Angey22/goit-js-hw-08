@@ -19,7 +19,7 @@ refs.form.addEventListener('input', throttle(onFormInput, 500));
 fillingFormInputsFromSavedInStorage();
 
 // Auxiliary variable for storing intermediate data in the JSON format.
-const formData = {};
+let formData = {};
 
 // The function code for filling the input form from the saved data in localStorage
 function fillingFormInputsFromSavedInStorage() {
@@ -31,32 +31,54 @@ function fillingFormInputsFromSavedInStorage() {
         // Convert data from JSON format to object.
         const data = JSON.parse(savedData);
 
-        // Remove "udefinde" if one of the fields is not filled in stored data.
-        if (!data.email) data.email = '';
-        if (!data.message) data.message = '';
-
         // Filling in the fields from the saved data.
-        refs.email.value = data.email;
-        refs.message.value = data.message;
+        if (data.email) refs.email.value = refs.email.value + data.email;
+        if (data.message) refs.message.value = refs.message.value + data.message;
     }
 }
 
 // The function code for Form Submit.
 function onFormSubmit(e) {
     // Resetting the default form settings.
-    e.preventDefault();
+    e.preventDefault(); 
 
-    // Getting data from localStorage, Convert it from JSON format to object & logging them in console.
-    const consolData = localStorage.getItem(STORAGE_KEY);
-    console.log('Form "Submit" =>', JSON.parse(consolData));
+    //! Check before submission:
+    // 1. Get data from localStorage in JSON format.
+    const storageData = localStorage.getItem(STORAGE_KEY);
 
-    // Removing visible text from fields & clearing localStorage.
+    // 2. Convert data from JSON format to object.
+    const consolData = JSON.parse(storageData);
+
+    // 3. Verification conditions.
+    if (Object.keys(consolData).length !== 2 || Object.values(consolData).some(el => el === '')) {
+        alert('Fill all fields of this Form to Submit!');
+        return;
+    }
+
+    // logging in console "Submit" form data as object
+    console.log('Form "Submit" =>', consolData);
+
+    // Removing visible text from fields, clearing localStorage & formData value.
     e.currentTarget.reset();
     localStorage.removeItem(STORAGE_KEY);
+    formData = {};
 }
 
 // The function code for input text registration. 
 function onFormInput(e) {
+    // Get data from localStorage in JSON format
+    const savedData = localStorage.getItem(STORAGE_KEY);
+
+    // Checking for stored data
+    if (savedData) {
+        // Convert data from JSON format to object.
+        const data = JSON.parse(savedData);
+
+        // Fill "formData" value from stored data.
+        formData = data;
+    }
+
+
     // Logging data entered into each individual form field.
     formData[e.target.name] = e.target.value;
 
